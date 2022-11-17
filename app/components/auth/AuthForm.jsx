@@ -1,9 +1,10 @@
-import { Form, Link, useSearchParams, useTransition } from "@remix-run/react";
+import { Form, Link, useActionData, useSearchParams, useTransition } from "@remix-run/react";
 import { FaLock, FaUserPlus } from "react-icons/fa";
 
 function AuthForm() {
 	const [searchParams] = useSearchParams();
 	const transition = useTransition();
+	const errors = useActionData();
 	const authMode = searchParams.get("mode") || "login";
 	const submitBtnCaption = authMode == "login" ? "Login" : "Register";
 	const toggleBtnCaption =
@@ -29,6 +30,15 @@ function AuthForm() {
 					minLength={7}
 				/>
 			</p>
+			{errors && (
+				<ul>
+					{Object.values(errors).map((error) => (
+						<li key={error}>
+							<span>{error}</span>
+						</li>
+					))}
+				</ul>
+			)}
 			<div className="form-actions">
 				<button disabled={isSubmitting}>
 					{isSubmitting ? "Authenticating" : submitBtnCaption}
